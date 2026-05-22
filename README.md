@@ -129,7 +129,7 @@ python scripts/eval_museg.py --version ... --num_shards 2 --shard_id 0
 python scripts/eval_museg.py --version ... --num_shards 2 --shard_id 1
 
 # Merge results
-python scripts/merge_shard_results.py results/A3_shard0.json results/A3_shard1.json results/A3_merged.json
+python scripts/merge_shard_results.py results/shard0.json results/shard1.json results/merged.json
 ```
 
 ## Experiments
@@ -143,26 +143,22 @@ python scripts/run_experiments.py --experiment all
 ### Run Specific Experiments
 
 ```bash
-# Experiment A: Main comparison (Baseline vs LoRA fine-tuned)
-python scripts/run_experiments.py --experiment A
+# Main experiment: Zero-shot baseline vs LoRA fine-tuned
+python scripts/run_experiments.py --experiment main
 
-# Experiment B: Ablation study (LoRA rank, epochs, learning rate)
-python scripts/run_experiments.py --experiment B
-
-# Experiment C: Cross-mine generalization (Leave-one-out)
-python scripts/run_experiments.py --experiment C
+# Ablation study: LoRA rank, epochs, learning rate
+python scripts/run_experiments.py --experiment ablation
 ```
 
 ### Experiment Design
 
-| Experiment | Description |
-|------------|-------------|
-| A1 | LISA-7B zero-shot baseline |
-| A3 | LISA-7B + LoRA (r=8, ep=10, lr=3e-4) |
-| B1 | LoRA rank ablation (r=4, 8, 16) |
-| B2 | Epoch ablation (5, 10, 15, 20) |
-| B3 | Learning rate ablation (1e-4, 3e-4, 5e-4) |
-| C1-C4 | Sampling strategy ablation |
+| Type | Experiment | Description |
+|------|------------|-------------|
+| Main | Baseline | LISA-7B zero-shot |
+| Main | Fine-tuned | LISA-7B + LoRA (r=8, ep=10, lr=3e-4) |
+| Ablation | LoRA rank | r = 4, 8, 16 |
+| Ablation | Epochs | 5, 10, 15, 20 |
+| Ablation | Learning rate | 1e-4, 3e-4, 5e-4 |
 
 ## Results Summary
 
@@ -170,18 +166,18 @@ python scripts/run_experiments.py --experiment C
 
 | Experiment | gIoU | cIoU | mIoU |
 |------------|------|------|------|
-| A1 (Baseline) | 0.1813 | 0.1498 | 0.2225 |
-| A3 (LoRA) | 0.2865 | 0.3854 | 0.3484 |
+| Baseline (zero-shot) | 0.1813 | 0.1498 | 0.2225 |
+| Fine-tuned (LoRA) | 0.2865 | 0.3854 | 0.3484 |
 
 ### Ablation Results
 
 | Experiment | gIoU | cIoU | mIoU |
 |------------|------|------|------|
-| B1_r4 | 0.2751 | 0.3025 | 0.3351 |
-| B1_r16 | 0.2744 | 0.2964 | 0.3206 |
-| B2_ep20 | 0.2802 | 0.3729 | 0.3356 |
-| B3_lr1e4 | 0.2645 | 0.3558 | 0.3314 |
-| B3_lr5e4 | 0.2535 | 0.3505 | 0.3165 |
+| LoRA r=4 | 0.2751 | 0.3025 | 0.3351 |
+| LoRA r=16 | 0.2744 | 0.2964 | 0.3206 |
+| Epoch=20 | 0.2802 | 0.3729 | 0.3356 |
+| LR=1e-4 | 0.2645 | 0.3558 | 0.3314 |
+| LR=5e-4 | 0.2535 | 0.3505 | 0.3165 |
 
 ## Generate Paper Tables
 
@@ -216,30 +212,30 @@ python app.py --version path/to/merged/model --precision bf16
 
 ```
 LISA-MUSeg/
-├── train_museg.py                      # Main training script
-├── merge_lora_weights_and_save_hf_model.py  # Merge LoRA weights
-├── chat.py                             # Interactive CLI demo
-├── app.py                              # Web demo
+├── train_museg.py                         # Main training script
+├── merge_lora_weights_and_save_hf_model.py # Merge LoRA weights
+├── chat.py                                # Interactive CLI demo
+├── app.py                                 # Web demo
 ├── model/
-│   ├── LISA.py                         # LISA model definition
-│   ├── llava/                          # LLaVA base model
-│   └── segment_anything/               # SAM model
+│   ├── LISA.py                            # LISA model definition
+│   ├── llava/                             # LLaVA base model
+│   └── segment_anything/                  # SAM model
 ├── utils/
-│   ├── museg_dataset.py                # MUSeg dataset loader
-│   ├── dataset.py                      # Dataset dispatcher
-│   ├── conversation.py                 # Conversation templates
-│   └── utils.py                        # Utility functions
+│   ├── museg_dataset.py                   # MUSeg dataset loader
+│   ├── dataset.py                         # Dataset dispatcher
+│   ├── conversation.py                    # Conversation templates
+│   └── utils.py                           # Utility functions
 ├── scripts/
-│   ├── convert_museg_to_lisa.py        # Generate data indices
-│   ├── eval_museg.py                   # Evaluation script
-│   ├── merge_shard_results.py          # Merge evaluation shards
-│   ├── run_experiments.py              # Run ablation experiments
-│   ├── summarize_experiment_results.py # Generate summary tables
-│   └── generate_paper_tables.py        # Generate LaTeX tables
-├── dataset/                            # Data indices (generated)
-├── runs/                               # Training checkpoints
-├── results/                            # Evaluation results
-└── vis_output/                         # Visualization outputs
+│   ├── convert_museg_to_lisa.py           # Generate data indices
+│   ├── eval_museg.py                      # Evaluation script
+│   ├── merge_shard_results.py             # Merge evaluation shards
+│   ├── run_experiments.py                 # Run experiments
+│   ├── summarize_experiment_results.py    # Generate summary tables
+│   └── generate_paper_tables.py           # Generate LaTeX tables
+├── dataset/                               # Data indices (generated)
+├── runs/                                  # Training checkpoints
+├── results/                               # Evaluation results
+└── vis_output/                            # Visualization outputs
 ```
 
 ## License
