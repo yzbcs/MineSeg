@@ -22,7 +22,7 @@ from utils.utils import (DEFAULT_IM_END_TOKEN, DEFAULT_IM_START_TOKEN,
 
 def parse_args(args):
     parser = argparse.ArgumentParser(description="LISA chat")
-    parser.add_argument("--version", default="xinlai/LISA-13B-llama2-v1")
+    parser.add_argument("--version", default="xinlai/LISA-7B-v1")
     parser.add_argument("--vis_save_path", default="./vis_output", type=str)
     parser.add_argument(
         "--precision",
@@ -183,7 +183,7 @@ This is the online demo of LISA. \n
 If multiple users are using it at the same time, they will enter a queue, which may delay some time. \n
 **Note**: **Different prompts can lead to significantly varied results**. \n
 **Note**: Please try to **standardize** your input text prompts to **avoid ambiguity**, and also pay attention to whether the **punctuations** of the input are correct. \n
-**Note**: Current model is **LISA-13B-llama2-v0-explanatory**, and 4-bit quantization may impair text-generation quality. \n
+**Note**: Current model is **LISA-7B-v1**, and 4-bit quantization may impair text-generation quality. \n
 **Usage**: <br>
 &ensp;(1) To let LISA **segment something**, input prompt like: "Can you segment xxx in this image?", "What is xxx in this image? Please output segmentation mask."; <br>
 &ensp;(2) To let LISA **output an explanation**, input prompt like: "What is xxx in this image? Please output segmentation mask and explain why."; <br>

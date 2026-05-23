@@ -5,7 +5,7 @@ MUSeg Dataset for LISA
   - Image/{stem}.jpg → RGB 原图
   - Label/{stem}_label.png → 语义标签 (uint8, 值 0-15)
 
-训练时: 随机选择图中存在的某个类别, 提取该类的二值 mask
+训练时: 根据采样策略选择类别 (fixed-1 / fixed-3 / random-1-3 / all)，提取二值 mask
 验证时: 遍历每张图的每个类别, 逐一评估
 """
 
@@ -42,7 +42,7 @@ SHORT_QUESTION_LIST = [
 
 
 class MUSegDataset(torch.utils.data.Dataset):
-    """MUSeg 训练数据集: 每次随机取一张图的一个类"""
+    """MUSeg 训练数据集: 支持 fixed-1 / fixed-3 / random-1-3 / all 采样策略"""
 
     pixel_mean = torch.Tensor([123.675, 116.28, 103.53]).view(-1, 1, 1)
     pixel_std = torch.Tensor([58.395, 57.12, 57.375]).view(-1, 1, 1)
