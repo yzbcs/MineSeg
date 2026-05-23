@@ -9,6 +9,7 @@
   - LoRA rank  = 4, 8, 16
   - 训练 epoch = 5, 10, 15, 20
   - 学习率     = 1e-4, 3e-4, 5e-4
+  - 采样策略   = fixed-1, fixed-3, random-1-3, all
 
 用法:
   python scripts/run_experiments.py --experiment main
@@ -75,7 +76,7 @@ def run_train(model_size, exp_name, lora_r=8, lora_alpha=16, epochs=20,
               steps_per_epoch=500, lr=3e-4, batch_size=1,
               grad_accumulation_steps=20, dataset_dir="./dataset",
               museg_data="museg|train", val_dataset="museg|val",
-              load_in_4bit=True):
+              load_in_4bit=True, sample_strategy="random-1-3"):
     """Launch train_museg.py (single-GPU, no DeepSpeed)."""
     cfg = MODEL_CONFIGS[model_size]
     version = resolve_model_path(cfg["hf_id"])
@@ -95,6 +96,7 @@ def run_train(model_size, exp_name, lora_r=8, lora_alpha=16, epochs=20,
         f"--dataset_dir={dataset_dir}",
         f"--museg_data={museg_data}",
         f"--val_dataset={val_dataset}",
+        f"--sample_strategy={sample_strategy}",
     ]
     if load_in_4bit:
         cmd.append("--load_in_4bit")
@@ -183,6 +185,14 @@ def experiment_ablation(args):
         run_train("7b", name, lr=lr)
         merged = merge_weights("7b", name)
         run_eval(merged, "llava_v1", "museg|test", f"results/lr_{lr_str}.json")
+
+    # 采样策略消融
+    for strategy in ["fixed-1", "fixed-3", "random-1-3", "all"]:
+        name = f"ablation-sample-{strategy}"
+        print(f"\n--- Sample strategy={strategy} ---")
+        run_train("7b", name, sample_strategy=strategy)
+        merged = merge_weights("7b", name)
+        run_eval(merged, "llava_v1", "museg|test", f"results/sample_{strategy}.json")
 
 
 def main():

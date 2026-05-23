@@ -60,9 +60,11 @@ class MUSegDataset(torch.utils.data.Dataset):
         num_classes_per_sample: int = 3,
         exclude_val=False,
         museg_data="museg|train",
+        sample_strategy="random-1-3",
     ):
         self.samples_per_epoch = samples_per_epoch
         self.num_classes_per_sample = num_classes_per_sample
+        self.sample_strategy = sample_strategy
         self.base_image_dir = base_image_dir
         self.image_size = image_size
         self.tokenizer = tokenizer
@@ -106,11 +108,24 @@ class MUSegDataset(torch.utils.data.Dataset):
             image, return_tensors="pt"
         )["pixel_values"][0]
 
-        # 随机采样 num_classes_per_sample 个类
-        if len(class_ids) >= self.num_classes_per_sample:
-            sampled_ids = random.sample(class_ids, self.num_classes_per_sample)
-        else:
+        # 根据采样策略选择类别
+        if self.sample_strategy == "all":
             sampled_ids = class_ids
+        elif self.sample_strategy == "random-1-3":
+            n = random.randint(1, min(3, len(class_ids)))
+            sampled_ids = random.sample(class_ids, n)
+        elif self.sample_strategy == "fixed-1":
+            sampled_ids = random.sample(class_ids, min(1, len(class_ids)))
+        elif self.sample_strategy == "fixed-3":
+            if len(class_ids) >= 3:
+                sampled_ids = random.sample(class_ids, 3)
+            else:
+                sampled_ids = class_ids
+        else:
+            if len(class_ids) >= self.num_classes_per_sample:
+                sampled_ids = random.sample(class_ids, self.num_classes_per_sample)
+            else:
+                sampled_ids = class_ids
 
         sampled_sents = [CLASS_NAMES[cid] for cid in sampled_ids]
         sampled_masks = [(label == cid).astype(np.float32) for cid in sampled_ids]

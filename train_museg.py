@@ -65,6 +65,8 @@ def parse_args():
     p.add_argument("--val_dataset", default="museg|val", type=str)
     p.add_argument("--dataset_dir", default="./dataset", type=str)
     p.add_argument("--num_classes_per_sample", default=3, type=int)
+    p.add_argument("--sample_strategy", default="random-1-3",
+                   choices=["fixed-1", "fixed-3", "random-1-3", "all"])
 
     # Training
     p.add_argument("--epochs", default=10, type=int)
@@ -297,6 +299,7 @@ def main():
         exclude_val=args.exclude_val, dataset=args.dataset,
         sample_rate=[float(x) for x in args.sample_rates.split(",")],
         museg_data=args.museg_data,
+        sample_strategy=args.sample_strategy,
     )
 
     train_sampler = DistributedSampler(train_dataset, shuffle=True) if use_ddp else None

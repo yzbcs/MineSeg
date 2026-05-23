@@ -166,6 +166,7 @@ class HybridDataset(torch.utils.data.Dataset):
         dataset="museg",
         sample_rate=[1],
         museg_data="museg|train",
+        sample_strategy="random-1-3",
     ):
         self.exclude_val = exclude_val
         self.dataset = dataset
@@ -190,6 +191,7 @@ class HybridDataset(torch.utils.data.Dataset):
                 num_classes_per_sample,
                 exclude_val,
                 museg_data,
+                sample_strategy,
             )
         ]
 
