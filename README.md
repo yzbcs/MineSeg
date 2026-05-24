@@ -1,4 +1,4 @@
-# LISA-MUSeg: Fine-tuning LISA for Underground Coal Mine Segmentation
+# MineSeg: LoRA-Based Adaptation of Multi-Modal Large Language Models for Underground Mine Semantic Segmentation
 
 This repository contains the code for fine-tuning [LISA](https://github.com/XinLai/LISA) (Large Language Instructed Segmentation Assistant) on the MUSeg dataset for semantic segmentation in underground coal mine scenes.
 
