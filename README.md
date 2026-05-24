@@ -26,28 +26,6 @@ pip install -r requirements.txt
 
 ## Dataset Preparation
 
-### MUSeg Dataset
-
-The MUSeg dataset contains 15 semantic classes for underground coal mine scenes:
-
-| Class ID | Class Name |
-|----------|------------|
-| 1 | person |
-| 2 | cable |
-| 3 | tube |
-| 4 | indicator |
-| 5 | electrical equipment |
-| 6 | electronic equipment |
-| 7 | mining equipment |
-| 8 | rail area |
-| 9 | support equipment |
-| 10 | door |
-| 11 | tools and materials |
-| 12 | rescue equipment |
-| 13 | container |
-| 14 | metal fixture |
-| 15 | anchoring equipment |
-
 ### Generate Data Indices
 
 ```bash
