@@ -242,11 +242,14 @@ LISA-MUSeg/
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
+This project is based on [LISA](https://github.com/XinLai/LISA) by Xin Lai et al., also licensed under Apache License 2.0.
+
 ## Acknowledgments
 
 - [LISA](https://github.com/XinLai/LISA) - Original LISA model
 - [LLaVA](https://github.com/haotian-liu/LLaVA) - Vision-language model
 - [Segment Anything](https://github.com/facebookresearch/segment-anything) - SAM model
+- [MUSeg](https://www.nature.com/articles/s41597-025-05493-9) - Multimodal semantic segmentation dataset for underground mine scenes
 
 ## Citation
 
@@ -258,5 +261,18 @@ If you find this code useful, please cite:
   author={Lai, Xin and Tian, Zhuotao and Chen, Yukang and Li, Yanwei and Yuan, Yuhui and Liu, Shu and Jia, Jiaya},
   journal={arXiv preprint arXiv:2308.00692},
   year={2023}
+}
+```
+
+```bibtex
+@article{wang2025museg,
+  title={MUSeg: A multimodal semantic segmentation dataset for complex underground mine scenes},
+  author={Wang, Jiaqi and others},
+  journal={Scientific Data},
+  volume={12},
+  pages={1--14},
+  year={2025},
+  publisher={Nature Publishing Group},
+  doi={10.1038/s41597-025-05493-9}
 }
 ```
