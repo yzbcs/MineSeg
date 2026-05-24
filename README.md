@@ -111,8 +111,6 @@ torchrun --nproc_per_node=2 train_museg.py \
 
 ## Evaluation
 
-### Single Experiment Evaluation
-
 ```bash
 python3 scripts/eval_museg.py \
     --version path/to/model \
@@ -120,64 +118,6 @@ python3 scripts/eval_museg.py \
     --dataset_dir ./dataset \
     --val_dataset "museg|test"
 ```
-
-### Parallel Evaluation (Sharded)
-
-```bash
-# Run shards in parallel
-python3 scripts/eval_museg.py --version ... --num_shards 2 --shard_id 0
-python3 scripts/eval_museg.py --version ... --num_shards 2 --shard_id 1
-
-# Merge results
-python3 scripts/merge_shard_results.py results/shard0.json results/shard1.json results/merged.json
-```
-
-## Experiments
-
-### Run All Experiments
-
-```bash
-python3 scripts/run_experiments.py --experiment all
-```
-
-### Run Specific Experiments
-
-```bash
-# Main experiment: Zero-shot baseline vs LoRA fine-tuned
-python3 scripts/run_experiments.py --experiment main
-
-# Ablation study: LoRA rank, epochs, learning rate
-python3 scripts/run_experiments.py --experiment ablation
-```
-
-### Experiment Design
-
-| Type | Experiment | Description |
-|------|------------|-------------|
-| Main | Baseline | LISA-7B zero-shot |
-| Main | Fine-tuned | LISA-7B + LoRA (r=8, ep=10, lr=3e-4) |
-| Ablation | LoRA rank | r = 4, 8, 16 |
-| Ablation | Epochs | 5, 10, 15, 20 |
-| Ablation | Learning rate | 1e-4, 3e-4, 5e-4 |
-
-## Results Summary
-
-### Main Results
-
-| Experiment | gIoU | cIoU | mIoU |
-|------------|------|------|------|
-| Baseline (zero-shot) | 0.1813 | 0.1498 | 0.2225 |
-| Fine-tuned (LoRA) | 0.2865 | 0.3854 | 0.3484 |
-
-### Ablation Results
-
-| Experiment | gIoU | cIoU | mIoU |
-|------------|------|------|------|
-| LoRA r=4 | 0.2751 | 0.3025 | 0.3351 |
-| LoRA r=16 | 0.2744 | 0.2964 | 0.3206 |
-| Epoch=20 | 0.2802 | 0.3729 | 0.3356 |
-| LR=1e-4 | 0.2645 | 0.3558 | 0.3314 |
-| LR=5e-4 | 0.2535 | 0.3505 | 0.3165 |
 
 ## Merge LoRA Weights
 
