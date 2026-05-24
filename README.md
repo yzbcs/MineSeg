@@ -51,7 +51,7 @@ The MUSeg dataset contains 15 semantic classes for underground coal mine scenes:
 ### Generate Data Indices
 
 ```bash
-python scripts/convert_museg_to_lisa.py \
+python3 scripts/convert_museg_to_lisa.py \
     --museg_root /path/to/MUSeg \
     --output_dir ./dataset/museg \
     --train_mines 01 03 06 \
@@ -64,7 +64,7 @@ python scripts/convert_museg_to_lisa.py \
 ### Single-GPU Training
 
 ```bash
-python train_museg.py \
+python3 train_museg.py \
     --version xinlai/LISA-7B-v1 \
     --conv_type llava_v1 \
     --precision bf16 \
@@ -74,7 +74,7 @@ python train_museg.py \
     --epochs 10 \
     --steps_per_epoch 500 \
     --batch_size 2 \
-    --grad_accumulation_steps 2 \
+    --grad_accumulation_steps 10 \
     --lr 3e-4 \
     --workers 4
 ```
@@ -92,7 +92,7 @@ torchrun --nproc_per_node=2 train_museg.py \
     --epochs 10 \
     --steps_per_epoch 500 \
     --batch_size 2 \
-    --grad_accumulation_steps 2 \
+    --grad_accumulation_steps 10 \
     --lr 3e-4 \
     --workers 4
 ```
@@ -114,7 +114,7 @@ torchrun --nproc_per_node=2 train_museg.py \
 ### Single Experiment Evaluation
 
 ```bash
-python scripts/eval_museg.py \
+python3 scripts/eval_museg.py \
     --version path/to/model \
     --precision bf16 \
     --dataset_dir ./dataset \
@@ -125,11 +125,11 @@ python scripts/eval_museg.py \
 
 ```bash
 # Run shards in parallel
-python scripts/eval_museg.py --version ... --num_shards 2 --shard_id 0
-python scripts/eval_museg.py --version ... --num_shards 2 --shard_id 1
+python3 scripts/eval_museg.py --version ... --num_shards 2 --shard_id 0
+python3 scripts/eval_museg.py --version ... --num_shards 2 --shard_id 1
 
 # Merge results
-python scripts/merge_shard_results.py results/shard0.json results/shard1.json results/merged.json
+python3 scripts/merge_shard_results.py results/shard0.json results/shard1.json results/merged.json
 ```
 
 ## Experiments
@@ -137,17 +137,17 @@ python scripts/merge_shard_results.py results/shard0.json results/shard1.json re
 ### Run All Experiments
 
 ```bash
-python scripts/run_experiments.py --experiment all
+python3 scripts/run_experiments.py --experiment all
 ```
 
 ### Run Specific Experiments
 
 ```bash
 # Main experiment: Zero-shot baseline vs LoRA fine-tuned
-python scripts/run_experiments.py --experiment main
+python3 scripts/run_experiments.py --experiment main
 
 # Ablation study: LoRA rank, epochs, learning rate
-python scripts/run_experiments.py --experiment ablation
+python3 scripts/run_experiments.py --experiment ablation
 ```
 
 ### Experiment Design
@@ -179,16 +179,10 @@ python scripts/run_experiments.py --experiment ablation
 | LR=1e-4 | 0.2645 | 0.3558 | 0.3314 |
 | LR=5e-4 | 0.2535 | 0.3505 | 0.3165 |
 
-## Generate Paper Tables
-
-```bash
-python scripts/generate_paper_tables.py --results_dir ./results
-```
-
 ## Merge LoRA Weights
 
 ```bash
-python merge_lora_weights_and_save_hf_model.py \
+python3 merge_lora_weights_and_save_hf_model.py \
     --version xinlai/LISA-7B-v1 \
     --weight runs/lisa-7b-museg-lora-r8/best.pt \
     --save_path ./models/lisa-7b-museg-merged
@@ -199,13 +193,13 @@ python merge_lora_weights_and_save_hf_model.py \
 ### Command Line
 
 ```bash
-python chat.py --version path/to/merged/model --precision bf16
+python3 chat.py --version path/to/merged/model --precision bf16
 ```
 
 ### Web Demo
 
 ```bash
-python app.py --version path/to/merged/model --precision bf16
+python3 app.py --version path/to/merged/model --precision bf16
 ```
 
 ## Project Structure
@@ -231,7 +225,6 @@ LISA-MUSeg/
 │   ├── merge_shard_results.py             # Merge evaluation shards
 │   ├── run_experiments.py                 # Run experiments
 │   ├── summarize_experiment_results.py    # Generate summary tables
-│   └── generate_paper_tables.py           # Generate LaTeX tables
 ├── dataset/                               # Data indices (generated)
 ├── runs/                                  # Training checkpoints
 ├── results/                               # Evaluation results
@@ -251,28 +244,3 @@ This project is based on [LISA](https://github.com/XinLai/LISA) by Xin Lai et al
 - [Segment Anything](https://github.com/facebookresearch/segment-anything) - SAM model
 - [MUSeg](https://www.nature.com/articles/s41597-025-05493-9) - Multimodal semantic segmentation dataset for underground mine scenes
 
-## Citation
-
-If you find this code useful, please cite:
-
-```bibtex
-@article{lai2023lisa,
-  title={LISA: Reasoning Segmentation via Large Language Model},
-  author={Lai, Xin and Tian, Zhuotao and Chen, Yukang and Li, Yanwei and Yuan, Yuhui and Liu, Shu and Jia, Jiaya},
-  journal={arXiv preprint arXiv:2308.00692},
-  year={2023}
-}
-```
-
-```bibtex
-@article{wang2025museg,
-  title={MUSeg: A multimodal semantic segmentation dataset for complex underground mine scenes},
-  author={Wang, Jiaqi and others},
-  journal={Scientific Data},
-  volume={12},
-  pages={1--14},
-  year={2025},
-  publisher={Nature Publishing Group},
-  doi={10.1038/s41597-025-05493-9}
-}
-```
