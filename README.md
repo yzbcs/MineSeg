@@ -128,20 +128,6 @@ python3 merge_lora_weights_and_save_hf_model.py \
     --save_path ./models/lisa-7b-museg-merged
 ```
 
-## Interactive Demo
-
-### Command Line
-
-```bash
-python3 chat.py --version path/to/merged/model --precision bf16
-```
-
-### Web Demo
-
-```bash
-python3 app.py --version path/to/merged/model --precision bf16
-```
-
 ## Project Structure
 
 ```
